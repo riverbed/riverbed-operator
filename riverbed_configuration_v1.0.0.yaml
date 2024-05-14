@@ -1,0 +1,39 @@
+apiVersion: operator.riverbed/betav1
+kind: RiverbedOperator
+metadata:
+  labels:
+    app.kubernetes.io/name: riverbedoperator
+    app.kubernetes.io/instance: riverbed-apm-agent
+    app.kubernetes.io/part-of: riverbed-operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: riverbed-operator
+  name: riverbed-apm-agent
+  namespace: riverbed-operator
+spec:
+
+# If this is a SaaS analysis server, use the Customer Id from the Install Agents, Standard Agent Installation.
+# If this is an on-prem analysis server, Leave the customerId as an empty string.
+  customerId: ""
+
+# If this is a SaaS analysis server, use the SaaSAnalysisServerHost from the Install Agents, Standard Agent Installation
+# If on-prem, use the analysis server address as you would on an agent installation.
+  analysisServerHost: "agents.apm.YOUR-ENV.aternity.com"
+
+
+## Start APM Agent Configuration
+  apmAgent:
+
+# Update the configName to specify the default process configuration name used by your instrumented applications if
+# If you are not using "default config"
+    configName: "default config"
+
+# Use this security context in order to see instrumentation status from the web ui.
+    securityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      privileged: true
+    resources:
+      limits:
+        cpu: 800m
+        memory: 700M
+
