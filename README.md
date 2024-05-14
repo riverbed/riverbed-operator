@@ -41,7 +41,7 @@ cert-manager-webhook-7d9f8748d4-f8g58      1/1     Running   0          6s
 Run the following from a command line. 
 
 ```
-kubectl apply -f https://raw.githubusercontent.com/rvbd-operator/beta/1.0.0/riverbed-operator.yaml
+kubectl apply -f https://raw.githubusercontent.com/riverbed/riverbed-operator/1.0.0/riverbed-operator.yaml
 ```
 
 # Configure the Riverbed Operator
@@ -51,7 +51,7 @@ The Customer ID and Analysis Server Host will need to be configured for the APM 
 
 
 ```
-kubectl create -f https://raw.githubusercontent.com/rvbd-operator/beta/1.0.0/riverbed_configuration_betav1.yaml --namespace=riverbed-operator --edit
+kubectl create -f https://raw.githubusercontent.com/riverbed/riverbed-operator/1.0.0/riverbed_configuration_v1.0.0.yaml --namespace=riverbed-operator --edit
 ```
 
 Under the ‘spec’ section of the file:
@@ -61,7 +61,7 @@ Under the ‘spec’ section of the file:
 **Verify that the Riverbed APM Agent is running**
 
 ```
-kubectl get pods -n riverbed-operator
+kubectl get pods --namespace riverbed-operator
 ```
 
 A Riverbed APM Agent pod will be running for each node:
@@ -72,11 +72,3 @@ riverbed-apm-agent-2hpcs                               1/1     Running   0      
 riverbed-apm-agent-54v54                               1/1     Running   0          6m36s
 riverbed-operator-controller-manager-d44c57448-8jdth   2/2     Running   0          19m
 ```
-
-
-# Configuring instrumentation for Java example
-**Deploy tomcat**
-```
-kubectl apply -f https://raw.githubusercontent.com/rvbd-operator/beta/1.0.0/example/tomcat.yaml
-```
-
