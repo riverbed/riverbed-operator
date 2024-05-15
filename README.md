@@ -72,3 +72,13 @@ riverbed-apm-agent-2hpcs                               1/1     Running   0      
 riverbed-apm-agent-54v54                               1/1     Running   0          6m36s
 riverbed-operator-controller-manager-d44c57448-8jdth   2/2     Running   0          19m
 ```
+
+# Legal
+
+© 2024 Riverbed Technology LLC All rights reserved.
+
+Riverbed and any Riverbed product or service name or logo used herein are trademarks of Riverbed. All other trademarks used herein belong to their respective owners. The trademarks and logos displayed herein cannot be used without the prior written consent of Riverbed or their respective owners.
+
+This product (“Product”) and this document together with the end user or technical documentation pertaining to the Product that is provided by Riverbed with the Product or otherwise made available by Riverbed (collectively, the “Documentation”) are licensed subject to the terms and conditions of the Riverbed customer agreement available at https://www.riverbed.com/license, including without limitation the additional terms and conditions set forth at https://www.riverbed.com/license/additional_use_rights.   No other rights or licenses are granted to the Product or Documentation except as set forth in the foregoing terms and conditions.  Riverbed and its licensors and suppliers retain all right, title, and interest in and to the Product and Documentation.
+
+To the extent that this Product contains any third party or open source software, any required notices or licenses applicable to such third party or open source software will be included in the Documentation available on the Riverbed Support site at https://support.riverbed.com or within the Product itself.

@@ -1,4 +1,4 @@
-apiVersion: operator.riverbed/betav1
+apiVersion: operator.riverbed/v1.0.0
 kind: RiverbedOperator
 metadata:
   labels:
