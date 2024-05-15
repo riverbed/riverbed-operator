@@ -639,12 +639,12 @@ spec:
         - /manager
         env:
         - name: RVBD_JAVA_INSTRUMENTATION_IMAGE
-          value: riverbed/riverbed-java-instrumentation:12.25.0.528
+          value: riverbed/riverbed-java-instrumentation:12.25.0.532
         - name: RVBD_DOTNET_INSTRUMENTATION_IMAGE
-          value: riverbed/riverbed-dotnet-instrumentation:12.25.0.528
+          value: riverbed/riverbed-dotnet-instrumentation:12.25.0.532
         - name: RVBD_APM_AGENT_IMAGE
-          value: riverbed/riverbed-apm-agent:12.25.0.528
-        image: riverbed/riverbed-operator:latest
+          value: riverbed/riverbed-apm-agent:12.25.0.532
+        image: riverbed/riverbed-operator:1.0.0-17
         livenessProbe:
           httpGet:
             path: /healthz
@@ -758,4 +758,3 @@ webhooks:
     resources:
     - pods
   sideEffects: None
-

@@ -1,4 +1,4 @@
-# riverbed-operator
+# Riverbed Operator
  
 
 # Getting started
@@ -17,25 +17,24 @@ az aks get-credentials --resource-group <your-resource-group> --name <your-aks-c
 aws eks --region <region-name> update-kubeconfig --name <cluster-name>
 ```
 
-# Install a Certificate Manager
-The Riverbed Operator requires that a certificate manager is installed in your cluster and that your cluster uses Kubernetes version 1.22 or greater. The Certificate Manager is used for auto-instrumentation of java and .Net applications. 
+# Install cert-manager
+The Riverbed Operator requires that  [cert-manager](https://cert-manager.io/docs/installation/) is installed in your cluster and that your cluster uses Kubernetes version 1.26 or greater. The cert-manager is used for auto-instrumentation of java and .Net applications. 
 
-**Check if a certificate manager is installed on your cluster**
+**Check if cert-manager is installed on your cluster**
 ```
 kubectl get pods --namespace cert-manager
 ```
-**Install a certificate manager in your cluster**
+**Install [cert-manager](https://cert-manager.io/docs/installation/)  in your cluster**
 ```
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.5/cert-manager.yaml
 ```
-Before installing the Riverbed Operator make sure the Certificate Manager is fully installed. 
-Some certificate manager installs may take up to thirty seconds to procecss. Run the command below and verify that you see three running processes.
+Before installing the Riverbed Operator make sure the cert-manager-webhook is fully installed. 
+Some installs may take up to thirty seconds to complete. Run the command below and verify READY is 1/1
 ```
-kubectl get pods --namespace cert-manager 
-NAME                                       READY   STATUS    RESTARTS   AGE
-cert-manager-5bd57786d4-wjbvn              1/1     Running   0          6s
-cert-manager-cainjector-57657d5754-vj6cb   1/1     Running   0          6s
-cert-manager-webhook-7d9f8748d4-f8g58      1/1     Running   0          6s
+kubectl get pod -n cert-manager -l app.kubernetes.io/name=webhook
+NAME                                    READY   STATUS    RESTARTS      AGE
+cert-manager-webhook-5778696f85-4l7l4   1/1     Running   2 (30h ago)   5d5h
+
 ```
 # Install the Riverbed Operator
 Run the following from a command line. 
@@ -55,9 +54,11 @@ kubectl create -f https://raw.githubusercontent.com/riverbed/riverbed-operator/1
 ```
 
 Under the ‘spec’ section of the file:
-- 
+
 - update the analysisServerHost to your Analysis Server Host identifier.
 - update the customerId to your Customer ID.   If using on-prem analysis server, leave this value as an empty string.
+- update the configName to specify the default process configuration name used by your instrumented applications
+
 **Verify that the Riverbed APM Agent is running**
 
 ```
@@ -71,6 +72,60 @@ NAME                                                  READY   STATUS    RESTARTS
 riverbed-apm-agent-2hpcs                               1/1     Running   0          6m36s
 riverbed-apm-agent-54v54                               1/1     Running   0          6m36s
 riverbed-operator-controller-manager-d44c57448-8jdth   2/2     Running   0          19m
+```
+
+# Auto-Instrument Your Applications
+
+Update your application's `spec.template.metadata.annotations` to include one or more of the annotations listed in the below table:
+
+
+| Annotation                            | Values                        | Defaults            | Description                                            |
+|---------------------------------------|-------------------------------|---------------------|--------------------------------------------------------|
+| instrument.apm.riverbed/inject-java   | "true" or "false"             | "false"             | For Java instrumentation                               |
+| instrument.apm.riverbed/inject-dotnet | "true" or "false"             | "false"             | For .Net instrumentation                               |
+| instrument.apm.riverbed/configName    | "Configuration Name"          | Operator configName | Process Configuration Name to instrument application.  |
+| instrument.apm.riverbed/runtime       | "linux-musl64" or "linux-x64" | "linux-x64"         | Runtime environment used to instrument the application |
+
+## Example instrumented java application deployment:
+
+```
+kubectl apply -f - <<EOF
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tomcat
+  name: tomcat
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tomcat
+  template:
+    metadata:
+      annotations:
+        instrument.apm.riverbed/inject-java: "true"
+      labels:
+        app: tomcat
+    spec:
+      containers:
+      - name: busybox
+        image: busybox:1.30.1
+        command:
+          - "sh"
+          - "-c"
+          - "while true; do sleep 6000; done"
+      - image: tomcat:9.0.64-jre11-openjdk-slim-bullseye
+        name: tomcat
+        resources:
+            limits:
+                cpu:    250m
+                memory: 1000Mi
+            requests:
+                cpu:    100m
+                memory: 256Mi
+EOF
 ```
 
 # Legal
