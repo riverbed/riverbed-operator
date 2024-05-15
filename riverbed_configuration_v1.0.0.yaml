@@ -1,4 +1,4 @@
-apiVersion: operator.riverbed/v1.0.0
+apiVersion: operator.riverbed/betav1
 kind: RiverbedOperator
 metadata:
   labels:
@@ -36,4 +36,3 @@ spec:
       limits:
         cpu: 800m
         memory: 700M
-
