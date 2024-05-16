@@ -1,5 +1,5 @@
 # riverbed-operator
- 
+
 
 # Getting started
 Welcome to the Riverbed Operator installation guide. This guide will quickly show you how to install the Riverbed Operator and instrument both Java and .Net applications running in Kubernetes.
@@ -18,7 +18,7 @@ aws eks --region <region-name> update-kubeconfig --name <cluster-name>
 ```
 
 # Install a Certificate Manager
-The Riverbed Operator requires that a certificate manager is installed in your cluster and that your cluster uses Kubernetes version 1.22 or greater. The Certificate Manager is used for auto-instrumentation of java and .Net applications. 
+The Riverbed Operator requires that a certificate manager is installed in your cluster and that your cluster uses Kubernetes version 1.22 or greater. The Certificate Manager is used for auto-instrumentation of java and .Net applications.
 
 **Check if a certificate manager is installed on your cluster**
 ```
@@ -28,17 +28,17 @@ kubectl get pods --namespace cert-manager
 ```
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.5/cert-manager.yaml
 ```
-Before installing the Riverbed Operator make sure the Certificate Manager is fully installed. 
+Before installing the Riverbed Operator make sure the Certificate Manager is fully installed.
 Some certificate manager installs may take up to thirty seconds to procecss. Run the command below and verify that you see three running processes.
 ```
-kubectl get pods --namespace cert-manager 
+kubectl get pods --namespace cert-manager
 NAME                                       READY   STATUS    RESTARTS   AGE
 cert-manager-5bd57786d4-wjbvn              1/1     Running   0          6s
 cert-manager-cainjector-57657d5754-vj6cb   1/1     Running   0          6s
 cert-manager-webhook-7d9f8748d4-f8g58      1/1     Running   0          6s
 ```
 # Install the Riverbed Operator
-Run the following from a command line. 
+Run the following from a command line.
 
 ```
 kubectl apply -f https://raw.githubusercontent.com/riverbed/riverbed-operator/1.0.0/riverbed-operator.yaml
@@ -55,7 +55,7 @@ kubectl create -f https://raw.githubusercontent.com/riverbed/riverbed-operator/1
 ```
 
 Under the ‘spec’ section of the file:
-- 
+-
 - update the analysisServerHost to your Analysis Server Host identifier.
 - update the customerId to your Customer ID.   If using on-prem analysis server, leave this value as an empty string.
 **Verify that the Riverbed APM Agent is running**
@@ -71,6 +71,46 @@ NAME                                                  READY   STATUS    RESTARTS
 riverbed-apm-agent-2hpcs                               1/1     Running   0          6m36s
 riverbed-apm-agent-54v54                               1/1     Running   0          6m36s
 riverbed-operator-controller-manager-d44c57448-8jdth   2/2     Running   0          19m
+```
+
+# Auto-Instrument Your Applications
+
+Update your application's `spec.template.metadata.annotations` to include one or more of the annotations listed in the below table:
+
+
+| Annotation                            | Values                        | Defaults            | Description                                            |
+|---------------------------------------|-------------------------------|---------------------|--------------------------------------------------------|
+| instrument.apm.riverbed/inject-java   | "true" or "false"             | "false"             | For Java instrumentation                               |
+| instrument.apm.riverbed/inject-dotnet | "true" or "false"             | "false"             | For .Net instrumentation                               |
+| instrument.apm.riverbed/configName    | "Configuration Name"          | Operator configName | Process Configuration Name to instrument application.  |
+| instrument.apm.riverbed/runtime       | "linux-musl64" or "linux-x64" | "linux-x64"         | Runtime environment used to instrument the application |
+
+## Example instrumented java application deployment:
+
+```
+kubectl apply -f - <<EOF
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring-app
+  template:
+    metadata:
+      annotations:
+        instrument.apm.riverbed/inject-java: "true"
+      labels:
+        app: spring-app
+    spec:
+      containers:
+      - name: spring-app
+        image: springio/gs-spring-boot-docker
+        ports:
+        - containerPort: 8080
+EOF
 ```
 
 # Legal
