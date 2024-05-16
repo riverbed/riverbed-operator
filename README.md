@@ -1,4 +1,4 @@
-# riverbed-operator
+# Riverbed Operator
 
 
 # Getting started
@@ -17,25 +17,23 @@ az aks get-credentials --resource-group <your-resource-group> --name <your-aks-c
 aws eks --region <region-name> update-kubeconfig --name <cluster-name>
 ```
 
-# Install a Certificate Manager
-The Riverbed Operator requires that a certificate manager is installed in your cluster and that your cluster uses Kubernetes version 1.22 or greater. The Certificate Manager is used for auto-instrumentation of java and .Net applications.
+# Install cert-manager
+The Riverbed Operator requires that  [cert-manager](https://cert-manager.io/docs/installation/) is installed in your cluster and that your cluster uses Kubernetes version 1.26 or greater. The cert-manager is used for auto-instrumentation of java and .Net applications.
 
-**Check if a certificate manager is installed on your cluster**
+**Check if cert-manager is installed on your cluster**
 ```
 kubectl get pods --namespace cert-manager
 ```
-**Install a certificate manager in your cluster**
+**Install  [cert-manager](https://cert-manager.io/docs/installation/) in your cluster**
 ```
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.5/cert-manager.yaml
 ```
-Before installing the Riverbed Operator make sure the Certificate Manager is fully installed.
-Some certificate manager installs may take up to thirty seconds to procecss. Run the command below and verify that you see three running processes.
+Before installing the Riverbed Operator make sure the cert-manager-webhook is fully installed.
+Some installs may take up to thirty seconds to complete. Run the command below and verify READY is 1/1
 ```
-kubectl get pods --namespace cert-manager
-NAME                                       READY   STATUS    RESTARTS   AGE
-cert-manager-5bd57786d4-wjbvn              1/1     Running   0          6s
-cert-manager-cainjector-57657d5754-vj6cb   1/1     Running   0          6s
-cert-manager-webhook-7d9f8748d4-f8g58      1/1     Running   0          6s
+kubectl get pod -n cert-manager -l app.kubernetes.io/name=webhook
+NAME                                    READY   STATUS    RESTARTS      AGE
+cert-manager-webhook-5778696f85-4l7l4   1/1     Running   2 (30h ago)   5d5h
 ```
 # Install the Riverbed Operator
 Run the following from a command line.
@@ -58,6 +56,7 @@ Under the ‘spec’ section of the file:
 -
 - update the analysisServerHost to your Analysis Server Host identifier.
 - update the customerId to your Customer ID.   If using on-prem analysis server, leave this value as an empty string.
+
 **Verify that the Riverbed APM Agent is running**
 
 ```
