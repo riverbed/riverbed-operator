@@ -93,38 +93,24 @@ kubectl apply -f - <<EOF
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: tomcat
-  name: tomcat
-  namespace: default
+  name: spring-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: tomcat
+      app: spring-app
   template:
     metadata:
       annotations:
         instrument.apm.riverbed/inject-java: "true"
       labels:
-        app: tomcat
+        app: spring-app
     spec:
       containers:
-      - name: busybox
-        image: busybox:1.30.1
-        command:
-          - "sh"
-          - "-c"
-          - "while true; do sleep 6000; done"
-      - image: tomcat:9.0.64-jre11-openjdk-slim-bullseye
-        name: tomcat
-        resources:
-            limits:
-                cpu:    250m
-                memory: 1000Mi
-            requests:
-                cpu:    100m
-                memory: 256Mi
+      - name: spring-app
+        image: springio/gs-spring-boot-docker
+        ports:
+        - containerPort: 8080
 EOF
 ```
 
