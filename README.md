@@ -85,6 +85,7 @@ Update your application's `spec.template.metadata.annotations` to include one or
 | instrument.apm.riverbed/runtime       | "linux-musl64" or "linux-x64" | "linux-x64"         | Runtime environment used to instrument the application |
 
 ## Example instrumented java application deployment:
+This shows adding the annotation into a deployment file.
 
 ```
 kubectl apply -f - <<EOF
@@ -110,6 +111,16 @@ spec:
         ports:
         - containerPort: 8080
 EOF
+```
+## Example instrumented dotnet application patch:
+You can also patch an existing deployment.   Here we are patching an existing deployment
+```
+kubectl patch deployment <application-deployment-name> -p '{"spec": {"template":{"metadata":{"annotations":{"instrument.apm.riverbed/inject-dotnet":"true"}}}} }'
+```
+## Example instrumented alpine application patch:
+If you are patching an existing alpine deployment, an additional patch is necessary:
+```
+kubectl patch deployment <application-deployment-name> -p '{"spec": {"template":{"metadata":{"annotations":{"instrument.apm.riverbed/runtime":"linux-musl-x64"}}}} }'
 ```
 
 # Legal
