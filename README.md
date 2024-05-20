@@ -112,17 +112,28 @@ spec:
         - containerPort: 8080
 EOF
 ```
+If your application is already running or you do not want to add annotation to your deployment file. You can patch an existing deployment.
+
 ## Example instrumented dotnet application patch:
-You can also patch an existing deployment.   Here we are patching an existing deployment
+Here we are patching an existing dotnet deployment
 ```
 kubectl patch deployment <application-deployment-name> -p '{"spec": {"template":{"metadata":{"annotations":{"instrument.apm.riverbed/inject-dotnet":"true"}}}} }'
+```
+**For Windows**
+```
+kubectl patch deployment <application-deployment-name> -p '{\"spec\": {\"template\":{\"metadata\":{\"annotations\":{\"instrument.apm.riverbed/inject-dotnet\":\"true\"}}}} }'
+```
+## Example instrumented java application patch:
+Here we are patching an existing java deployment
+```
+kubectl patch deployment <application-deployment-name> -p '{"spec": {"template":{"metadata":{"annotations":{"instrument.apm.riverbed/inject-java":"true"}}}} }'
 ```
 **For Windows**
 ```
 kubectl patch deployment <application-deployment-name> -p '{\"spec\": {\"template\":{\"metadata\":{\"annotations\":{\"instrument.apm.riverbed/inject-java\":\"true\"}}}} }'
 ```
 ## Example instrumented alpine application patch:
-If you are patching an existing alpine deployment, an additional patch is necessary:
+If you are patching an existing alpine deployment, this additional patch is necessary, after you've applied the dotnet or java patches above:
 ```
 kubectl patch deployment <application-deployment-name> -p '{"spec": {"template":{"metadata":{"annotations":{"instrument.apm.riverbed/runtime":"linux-musl-x64"}}}} }'
 ```
@@ -130,6 +141,8 @@ kubectl patch deployment <application-deployment-name> -p '{"spec": {"template":
 ```
 kubectl patch deployment <application-deployment-name> -p '{\"spec\": {\"template\":{\"metadata\":{\"annotations\":{\"instrument.apm.riverbed/runtime\":\"linux-musl-x64\"}}}} }'
 ```
+
+
 # Legal
 
 © 2024 Riverbed Technology LLC All rights reserved.
