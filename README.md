@@ -117,12 +117,19 @@ You can also patch an existing deployment.   Here we are patching an existing de
 ```
 kubectl patch deployment <application-deployment-name> -p '{"spec": {"template":{"metadata":{"annotations":{"instrument.apm.riverbed/inject-dotnet":"true"}}}} }'
 ```
+**For Windows**
+```
+kubectl patch deployment <application-deployment-name> -p '{\"spec\": {\"template\":{\"metadata\":{\"annotations\":{\"instrument.apm.riverbed/inject-java\":\"true\"}}}} }'
+```
 ## Example instrumented alpine application patch:
 If you are patching an existing alpine deployment, an additional patch is necessary:
 ```
 kubectl patch deployment <application-deployment-name> -p '{"spec": {"template":{"metadata":{"annotations":{"instrument.apm.riverbed/runtime":"linux-musl-x64"}}}} }'
 ```
-
+**For Windows**
+```
+kubectl patch deployment <application-deployment-name> -p '{\"spec\": {\"template\":{\"metadata\":{\"annotations\":{\"instrument.apm.riverbed/runtime\":\"linux-musl-x64\"}}}} }'
+```
 # Legal
 
 © 2024 Riverbed Technology LLC All rights reserved.
