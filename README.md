@@ -84,6 +84,9 @@ Update your application's `spec.template.metadata.annotations` to include one or
 | instrument.apm.riverbed/configName    | "Configuration Name"          | Operator configName | Process Configuration Name to instrument application.  |
 | instrument.apm.riverbed/runtime       | "linux-musl64" or "linux-x64" | "linux-x64"         | Runtime environment used to instrument the application |
 
+<details>
+  <summary>Example</summary>
+
 ## Example instrumented java application deployment:
 
 ```
@@ -112,7 +115,7 @@ spec:
 EOF
 ```
 
-
+</details>
 
 <details open>
   <summary>Uninstall</summary>
