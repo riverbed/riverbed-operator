@@ -112,6 +112,26 @@ spec:
 EOF
 ```
 
+
+
+<details open>
+  <summary>Uninstall</summary>
+
+# How to uninstall the operator
+
+To uninstall, first remove any riverbedoperator configurations you have created:
+
+```
+kubectl delete riverbedoperator  -n riverbed-operator --all
+```
+
+Then uninstall the operator
+
+```
+kubectl delete -f https://raw.githubusercontent.com/riverbed/riverbed-operator/1.0.0/riverbed-operator.yaml
+```
+</details>
+
 # Legal
 
 © 2024 Riverbed Technology LLC All rights reserved.
