@@ -73,7 +73,7 @@ kubectl patch serviceaccount riverbed-operator-controller-manager -n riverbed-op
 kubectl edit deployment -n riverbed-operator riverbed-operator-controller-manager
 ```
 
-For example if this is the original image identifiers:
+For example if these are the original image identifiers for the operator deployment:
 ```
         env:
         - name: RVBD_JAVA_INSTRUMENTATION_IMAGE
@@ -84,15 +84,15 @@ For example if this is the original image identifiers:
           value: riverbed/riverbed-apm-agent:12.25.0.532
         image: riverbed/riverbed-operator:1.0.0-17
 ```
-Change the image identifiers as appropriate to the following to indicate locations for each docker image:
+Change the image identifiers as appropriate to the following to indicate locations for each docker image. For example if your docker registry is zeus.run:
 
 ```
         - name: RVBD_JAVA_INSTRUMENTATION_IMAGE
-          value: zeus.run/agent/riverbed-java:12.25.0.532
+          value: zeus.run/riverbed/riverbed-java-instrumentation:12.25.0.532
         - name: RVBD_DOTNET_INSTRUMENTATION_IMAGE
-          value: zeus.run/agent/riverbed-dotnet:12.25.0.532
+          value: zeus.run/riverbed/riverbed-dotnet-instrumentation:12.25.0.532
         - name: RVBD_APM_AGENT_IMAGE
-          value: zeus.run/agent/sidecar:12.25.0.532
+          value: zeus.run/riverbed/riverbed-apm-agent:12.25.0.532
         image: zeus.run/riverbed/riverbed-operator:1.0.0-17
 ```
 
