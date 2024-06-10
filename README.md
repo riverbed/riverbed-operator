@@ -42,6 +42,62 @@ Run the following from a command line.
 kubectl apply -f https://raw.githubusercontent.com/riverbed/riverbed-operator/1.0.0/riverbed-operator.yaml
 ```
 
+<details>
+  <summary>Additional steps if using private registry</summary>
+
+## Post install steps if using private registry.
+
+
+***Create an imagePullSecret***
+
+Create a secret named **regcred** to access Docker images from a private repository. To create the secret, enter the command of the following form
+
+```
+kubectl create secret docker-registry regcred -n riverbed-operator --docker-server=<your-registry-server> --docker-username=<your-name> --docker-password=<your-password> --docker-email=<your-email>
+```
+
+for example:
+
+```
+kubectl create secret docker-registry regcred -n riverbed-operator --docker-server=zeus.run --docker-username=myuser --docker-password=mypassword --docker-email=myuser@riverbed.com
+```
+
+***Add image pull secret to service account***
+```
+kubectl patch serviceaccount riverbed-operator-controller-manager -n riverbed-operator -p '{"imagePullSecrets": [{"name": "regcred"}]}'
+```
+
+***Edit the image identifier in riverbed-operator-controller-manager deployment***
+
+```
+kubectl edit deployment -n riverbed-operator riverbed-operator-controller-manager
+```
+
+For example if this is the original image identifiers:
+```
+        env:
+        - name: RVBD_JAVA_INSTRUMENTATION_IMAGE
+          value: riverbed/riverbed-java-instrumentation:12.25.0.532
+        - name: RVBD_DOTNET_INSTRUMENTATION_IMAGE
+          value: riverbed/riverbed-dotnet-instrumentation:12.25.0.532
+        - name: RVBD_APM_AGENT_IMAGE
+          value: riverbed/riverbed-apm-agent:12.25.0.532
+        image: riverbed/riverbed-operator:1.0.0-17
+```
+Change the image identifiers as appropriate to the following to indicate locations for each docker image:
+
+```
+        - name: RVBD_JAVA_INSTRUMENTATION_IMAGE
+          value: zeus.run/agent/riverbed-java:12.25.0.532
+        - name: RVBD_DOTNET_INSTRUMENTATION_IMAGE
+          value: zeus.run/agent/riverbed-dotnet:12.25.0.532
+        - name: RVBD_APM_AGENT_IMAGE
+          value: zeus.run/agent/sidecar:12.25.0.532
+        image: zeus.run/riverbed/riverbed-operator:1.0.0-17
+```
+
+</details>
+
 # Configure the Riverbed Operator
 
 
