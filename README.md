@@ -82,7 +82,7 @@ Update your application's `spec.template.metadata.annotations` to include one or
 | instrument.apm.riverbed/inject-java   | "true" or "false"             | "false"             | For Java instrumentation                               |
 | instrument.apm.riverbed/inject-dotnet | "true" or "false"             | "false"             | For .Net instrumentation                               |
 | instrument.apm.riverbed/configName    | "Configuration Name"          | Operator configName | Process Configuration Name to instrument application.  |
-| instrument.apm.riverbed/runtime       | "linux-musl-x64" or "linux-x64" | "linux-x64"         | Runtime environment used to instrument the application |
+| instrument.apm.riverbed/runtime       | "linux-musl-x64" or "linux-x64" | "linux-x64"       | Runtime environment used to instrument the application.  If your app is based on Alpine Linux you need to add the annotation to use linux-musl-x64 runtime instead of the default.|
 
 ## Example instrumented java application deployment:
 This shows adding the annotation into a deployment file.
