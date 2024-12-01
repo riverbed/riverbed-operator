@@ -49,7 +49,7 @@ The Customer ID and Analysis Server Host will need to be configured for the APM 
 
 
 ```
-kubectl create -f https://raw.githubusercontent.com/riverbed/riverbed-operator/1.0.0/riverbed_configuration_v1.0.0.yaml --namespace=riverbed-operator --edit
+kubectl create -f https://raw.githubusercontent.com/riverbed/riverbed-operator/1.0.0/riverbed_configuration.yaml --namespace=riverbed-operator --edit
 ```
 
 Under the ‘spec’ section of the file:
