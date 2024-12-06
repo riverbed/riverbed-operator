@@ -32,7 +32,4 @@ spec:
       runAsUser: 0
       runAsGroup: 0
       privileged: true
-    resources:
-      limits:
-        cpu: 800m
-        memory: 700M
+
