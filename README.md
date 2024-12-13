@@ -39,7 +39,7 @@ cert-manager-webhook-5778696f85-4l7l4   1/1     Running   2 (30h ago)   5d5h
 Run the following from a command line.
 
 ```
-kubectl apply -f https://github.com/riverbed/riverbed-operator/releases/download/v1.0.1/riverbed-operator.yaml
+kubectl apply -f https://github.com/riverbed/riverbed-operator/releases/latest/download/riverbed-operator.yaml
 ```
 
 # Configure the Riverbed Operator
@@ -49,7 +49,7 @@ The Customer ID and Analysis Server Host will need to be configured for the APM 
 
 
 ```
-kubectl create -f https://github.com/riverbed/riverbed-operator/releases/download/v1.0.1/riverbed_configuration.yaml --namespace=riverbed-operator --edit
+kubectl create -f https://github.com/riverbed/riverbed-operator/releases/latest/download/riverbed_configuration.yaml --namespace=riverbed-operator --edit
 ```
 
 Under the ‘spec’ section of the file:
