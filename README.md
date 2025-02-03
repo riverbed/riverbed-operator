@@ -35,13 +35,12 @@ kubectl get pod -n cert-manager -l app.kubernetes.io/name=webhook
 NAME                                    READY   STATUS    RESTARTS      AGE
 cert-manager-webhook-5778696f85-4l7l4   1/1     Running   2 (30h ago)   5d5h
 ```
-# Install the Riverbed Operator
-Run the following from a command line.
+# Install/Upgrade the Riverbed Operator
+Run the following from a command line to install the riverbed operator.  This can also be used to upgrade a previous release of the operator to the latest release.
 
 ```
 kubectl apply -f https://github.com/riverbed/riverbed-operator/releases/latest/download/riverbed-operator.yaml
 ```
-
 # Configure the Riverbed Operator
 
 
