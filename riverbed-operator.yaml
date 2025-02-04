@@ -643,7 +643,7 @@ spec:
         - name: RVBD_DOTNET_INSTRUMENTATION_IMAGE
           value: riverbed/riverbed-dotnet-instrumentation:12.25.0.532
         - name: RVBD_APM_AGENT_IMAGE
-          value: riverbed/riverbed-apm-agent:12.25.0.532
+          value: riverbed/riverbed-apm-agent:12.25.0.541
         image: riverbed/riverbed-operator:1.0.0-17
         livenessProbe:
           httpGet:
