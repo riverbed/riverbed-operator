@@ -39,7 +39,7 @@ cert-manager-webhook-5778696f85-4l7l4   1/1     Running   2 (30h ago)   5d5h
 Run the following from a command line to install the riverbed operator.  This can also be used to upgrade from a previous release (1.0.0 or 1.0.1) of the riverbed operator to the latest release.
 
 ```
-kubectl apply -f https://github.com/riverbed/riverbed-operator/blob/v1.0.2/riverbed-operator.yaml
+kubectl apply -f https://raw.githubusercontent.com/riverbed/riverbed-operator/v1.0.2/riverbed-operator.yaml
 ```
 # Configure the Riverbed Operator
 
