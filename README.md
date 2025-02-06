@@ -140,8 +140,17 @@ kubectl patch deployment <application-deployment-name> -p '{"spec": {"template":
 ```
 kubectl patch deployment <application-deployment-name> -p '{\"spec\": {\"template\":{\"metadata\":{\"annotations\":{\"instrument.apm.riverbed/runtime\":\"linux-musl-x64\"}}}} }'
 ```
+## Example application patch to disable java instrumentation:
+Here we are patching an existing java deployment to disable instrumentation
+```
+kubectl patch deployment <application-deployment-name> --type=json -p='[{"op": "remove", "path": "/spec/template/metadata/annotations/instrument.apm.riverbed~1inject-java"}]'
+```
 
-
+## Example application patch to disable dotnet instrumentation:
+Here we are patching an existing dotnet deployment to disable instrumentation
+```
+kubectl patch deployment <application-deployment-name> --type=json -p='[{"op": "remove", "path": "/spec/template/metadata/annotations/instrument.apm.riverbed~1inject-dotnet"}]'
+```
 # Legal
 
 © 2024 Riverbed Technology LLC All rights reserved.
