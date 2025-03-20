@@ -2,12 +2,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    app.kubernetes.io/component: manager
-    app.kubernetes.io/created-by: riverbed-operator
-    app.kubernetes.io/instance: system
     app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: namespace
-    app.kubernetes.io/part-of: riverbed-operator
+    app.kubernetes.io/name: riverbed-operator
     control-plane: controller-manager
   name: riverbed-operator
 ---
@@ -15,8 +11,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.11.2
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.17.2
   name: riverbedoperators.operator.riverbed
 spec:
   group: operator.riverbed
@@ -27,16 +22,25 @@ spec:
     singular: riverbedoperator
   scope: Namespaced
   versions:
-  - name: betav1
+  - name: v1
     schema:
       openAPIV3Schema:
-        description: RiverbedOperator is the Schema for the Riverbedoperators API
+        description: RiverbedOperator is the Schema for the riverbedoperators API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -44,44 +48,83 @@ spec:
             description: RiverbedOperatorSpec defines the desired state of RiverbedOperator
             properties:
               analysisServerHost:
-                description: The system name, fully-qualified domain name (FQDN), or IP address for the analysis server in your environment.
+                description: The system name, fully-qualified domain name (FQDN),
+                  or IP address for the analysis server in your environment.
                 type: string
               analysisServerPort:
-                description: Analysis Server port Defaults to 443.
+                description: |-
+                  Analysis Server port
+                  Defaults to 443.
                 format: int32
                 type: integer
               apmAgent:
                 description: Apm Agent specific configuration
                 properties:
                   configName:
-                    description: The default configuration used by instrumented applications. Default is "default config"
+                    description: |-
+                      The default configuration used by instrumented applications.
+                      Default is "default config"
                     type: string
                   containerMetrics:
-                    description: 'Whether container metrics are collected by the agent. Optional: Default to false.'
+                    description: |-
+                      Whether container metrics are collected by the agent.
+                      Optional: Default to false.
                     type: boolean
                   hostMetrics:
-                    description: 'Whether host OS metrics are collected by the agent. Optional: Default to true.'
+                    description: |-
+                      Whether host OS metrics are collected by the agent.
+                      Optional: Default to true.
                     type: boolean
                   javaMetrics:
-                    description: 'Whether java metrics are collected by the agent. Optional: Default to true.'
+                    description: |-
+                      Whether java metrics are collected by the agent.
+                      Optional: Default to true.
                     type: boolean
                   logicalServer:
-                    description: Special logical server tag that is associated with all nodes in the cluster. Default is ""
+                    description: |-
+                      Special logical server tag that is associated with all nodes in the cluster.
+                      Default is ""
                     type: string
                   maxInstrLogs:
-                    description: Maximum number of instrumentation logs kept on the agent. Defaults to 500.
+                    description: |-
+                      Maximum number of instrumentation logs kept on the agent.
+                      Defaults to 500.
                     format: int32
                     type: integer
+                  processMetrics:
+                    description: |-
+                      Whether process metrics are collected by the agent.
+                      Optional: Default to false.
+                    type: boolean
                   resources:
-                    description: 'Compute Resources required by this container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                    description: |-
+                      Compute Resources required by this container.
+                      Cannot be updated.
+                      More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
                     properties:
                       claims:
-                        description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable."
+                        description: |-
+                          Claims lists the names of resources, defined in spec.resourceClaims,
+                          that are used by this container.
+
+                          This is an alpha field and requires enabling the
+                          DynamicResourceAllocation feature gate.
+
+                          This field is immutable. It can only be set for containers.
                         items:
                           description: ResourceClaim references one entry in PodSpec.ResourceClaims.
                           properties:
                             name:
-                              description: Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.
+                              description: |-
+                                Name must match the name of one entry in pod.spec.resourceClaims of
+                                the Pod where this field is used. It makes that resource available
+                                inside a container.
+                              type: string
+                            request:
+                              description: |-
+                                Request is the name chosen for a request in the referenced claim.
+                                If empty, everything from the claim is made available, otherwise
+                                only the result of this request.
                               type: string
                           required:
                           - name
@@ -97,7 +140,9 @@ spec:
                           - type: string
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                        description: 'Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                        description: |-
+                          Limits describes the maximum amount of compute resources allowed.
+                          More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
                         type: object
                       requests:
                         additionalProperties:
@@ -106,93 +151,203 @@ spec:
                           - type: string
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                        description: 'Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                        description: |-
+                          Requests describes the minimum amount of compute resources required.
+                          If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
+                          otherwise to an implementation-defined value. Requests cannot exceed Limits.
+                          More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
                         type: object
                     type: object
                   securityContext:
-                    description: 'Optional: SecurityContext defines the security options the ephemeral container should be run with.'
+                    description: 'Optional: SecurityContext defines the security options
+                      the ephemeral container should be run with.'
                     properties:
                       allowPrivilegeEscalation:
-                        description: 'AllowPrivilegeEscalation controls whether a process can gain more privileges than its parent process. This bool directly controls if the no_new_privs flag will be set on the container process. AllowPrivilegeEscalation is true always when the container is: 1) run as Privileged 2) has CAP_SYS_ADMIN Note that this field cannot be set when spec.os.name is windows.'
+                        description: |-
+                          AllowPrivilegeEscalation controls whether a process can gain more
+                          privileges than its parent process. This bool directly controls if
+                          the no_new_privs flag will be set on the container process.
+                          AllowPrivilegeEscalation is true always when the container is:
+                          1) run as Privileged
+                          2) has CAP_SYS_ADMIN
+                          Note that this field cannot be set when spec.os.name is windows.
                         type: boolean
+                      appArmorProfile:
+                        description: |-
+                          appArmorProfile is the AppArmor options to use by this container. If set, this profile
+                          overrides the pod's appArmorProfile.
+                          Note that this field cannot be set when spec.os.name is windows.
+                        properties:
+                          localhostProfile:
+                            description: |-
+                              localhostProfile indicates a profile loaded on the node that should be used.
+                              The profile must be preconfigured on the node to work.
+                              Must match the loaded name of the profile.
+                              Must be set if and only if type is "Localhost".
+                            type: string
+                          type:
+                            description: |-
+                              type indicates which kind of AppArmor profile will be applied.
+                              Valid options are:
+                                Localhost - a profile pre-loaded on the node.
+                                RuntimeDefault - the container runtime's default profile.
+                                Unconfined - no AppArmor enforcement.
+                            type: string
+                        required:
+                        - type
+                        type: object
                       capabilities:
-                        description: The capabilities to add/drop when running containers. Defaults to the default set of capabilities granted by the container runtime. Note that this field cannot be set when spec.os.name is windows.
+                        description: |-
+                          The capabilities to add/drop when running containers.
+                          Defaults to the default set of capabilities granted by the container runtime.
+                          Note that this field cannot be set when spec.os.name is windows.
                         properties:
                           add:
                             description: Added capabilities
                             items:
-                              description: Capability represent POSIX capabilities type
+                              description: Capability represent POSIX capabilities
+                                type
                               type: string
                             type: array
+                            x-kubernetes-list-type: atomic
                           drop:
                             description: Removed capabilities
                             items:
-                              description: Capability represent POSIX capabilities type
+                              description: Capability represent POSIX capabilities
+                                type
                               type: string
                             type: array
+                            x-kubernetes-list-type: atomic
                         type: object
                       privileged:
-                        description: Run container in privileged mode. Processes in privileged containers are essentially equivalent to root on the host. Defaults to false. Note that this field cannot be set when spec.os.name is windows.
+                        description: |-
+                          Run container in privileged mode.
+                          Processes in privileged containers are essentially equivalent to root on the host.
+                          Defaults to false.
+                          Note that this field cannot be set when spec.os.name is windows.
                         type: boolean
                       procMount:
-                        description: procMount denotes the type of proc mount to use for the containers. The default is DefaultProcMount which uses the container runtime defaults for readonly paths and masked paths. This requires the ProcMountType feature flag to be enabled. Note that this field cannot be set when spec.os.name is windows.
+                        description: |-
+                          procMount denotes the type of proc mount to use for the containers.
+                          The default value is Default which uses the container runtime defaults for
+                          readonly paths and masked paths.
+                          This requires the ProcMountType feature flag to be enabled.
+                          Note that this field cannot be set when spec.os.name is windows.
                         type: string
                       readOnlyRootFilesystem:
-                        description: Whether this container has a read-only root filesystem. Default is false. Note that this field cannot be set when spec.os.name is windows.
+                        description: |-
+                          Whether this container has a read-only root filesystem.
+                          Default is false.
+                          Note that this field cannot be set when spec.os.name is windows.
                         type: boolean
                       runAsGroup:
-                        description: The GID to run the entrypoint of the container process. Uses runtime default if unset. May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is windows.
+                        description: |-
+                          The GID to run the entrypoint of the container process.
+                          Uses runtime default if unset.
+                          May also be set in PodSecurityContext.  If set in both SecurityContext and
+                          PodSecurityContext, the value specified in SecurityContext takes precedence.
+                          Note that this field cannot be set when spec.os.name is windows.
                         format: int64
                         type: integer
                       runAsNonRoot:
-                        description: Indicates that the container must run as a non-root user. If true, the Kubelet will validate the image at runtime to ensure that it does not run as UID 0 (root) and fail to start the container if it does. If unset or false, no such validation will be performed. May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
+                        description: |-
+                          Indicates that the container must run as a non-root user.
+                          If true, the Kubelet will validate the image at runtime to ensure that it
+                          does not run as UID 0 (root) and fail to start the container if it does.
+                          If unset or false, no such validation will be performed.
+                          May also be set in PodSecurityContext.  If set in both SecurityContext and
+                          PodSecurityContext, the value specified in SecurityContext takes precedence.
                         type: boolean
                       runAsUser:
-                        description: The UID to run the entrypoint of the container process. Defaults to user specified in image metadata if unspecified. May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is windows.
+                        description: |-
+                          The UID to run the entrypoint of the container process.
+                          Defaults to user specified in image metadata if unspecified.
+                          May also be set in PodSecurityContext.  If set in both SecurityContext and
+                          PodSecurityContext, the value specified in SecurityContext takes precedence.
+                          Note that this field cannot be set when spec.os.name is windows.
                         format: int64
                         type: integer
                       seLinuxOptions:
-                        description: The SELinux context to be applied to the container. If unspecified, the container runtime will allocate a random SELinux context for each container.  May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is windows.
+                        description: |-
+                          The SELinux context to be applied to the container.
+                          If unspecified, the container runtime will allocate a random SELinux context for each
+                          container.  May also be set in PodSecurityContext.  If set in both SecurityContext and
+                          PodSecurityContext, the value specified in SecurityContext takes precedence.
+                          Note that this field cannot be set when spec.os.name is windows.
                         properties:
                           level:
-                            description: Level is SELinux level label that applies to the container.
+                            description: Level is SELinux level label that applies
+                              to the container.
                             type: string
                           role:
-                            description: Role is a SELinux role label that applies to the container.
+                            description: Role is a SELinux role label that applies
+                              to the container.
                             type: string
                           type:
-                            description: Type is a SELinux type label that applies to the container.
+                            description: Type is a SELinux type label that applies
+                              to the container.
                             type: string
                           user:
-                            description: User is a SELinux user label that applies to the container.
+                            description: User is a SELinux user label that applies
+                              to the container.
                             type: string
                         type: object
                       seccompProfile:
-                        description: The seccomp options to use by this container. If seccomp options are provided at both the pod & container level, the container options override the pod options. Note that this field cannot be set when spec.os.name is windows.
+                        description: |-
+                          The seccomp options to use by this container. If seccomp options are
+                          provided at both the pod & container level, the container options
+                          override the pod options.
+                          Note that this field cannot be set when spec.os.name is windows.
                         properties:
                           localhostProfile:
-                            description: localhostProfile indicates a profile defined in a file on the node should be used. The profile must be preconfigured on the node to work. Must be a descending path, relative to the kubelet's configured seccomp profile location. Must only be set if type is "Localhost".
+                            description: |-
+                              localhostProfile indicates a profile defined in a file on the node should be used.
+                              The profile must be preconfigured on the node to work.
+                              Must be a descending path, relative to the kubelet's configured seccomp profile location.
+                              Must be set if type is "Localhost". Must NOT be set for any other type.
                             type: string
                           type:
-                            description: "type indicates which kind of seccomp profile will be applied. Valid options are: \n Localhost - a profile defined in a file on the node should be used. RuntimeDefault - the container runtime default profile should be used. Unconfined - no profile should be applied."
+                            description: |-
+                              type indicates which kind of seccomp profile will be applied.
+                              Valid options are:
+
+                              Localhost - a profile defined in a file on the node should be used.
+                              RuntimeDefault - the container runtime default profile should be used.
+                              Unconfined - no profile should be applied.
                             type: string
                         required:
                         - type
                         type: object
                       windowsOptions:
-                        description: The Windows specific settings applied to all containers. If unspecified, the options from the PodSecurityContext will be used. If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is linux.
+                        description: |-
+                          The Windows specific settings applied to all containers.
+                          If unspecified, the options from the PodSecurityContext will be used.
+                          If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
+                          Note that this field cannot be set when spec.os.name is linux.
                         properties:
                           gmsaCredentialSpec:
-                            description: GMSACredentialSpec is where the GMSA admission webhook (https://github.com/kubernetes-sigs/windows-gmsa) inlines the contents of the GMSA credential spec named by the GMSACredentialSpecName field.
+                            description: |-
+                              GMSACredentialSpec is where the GMSA admission webhook
+                              (https://github.com/kubernetes-sigs/windows-gmsa) inlines the contents of the
+                              GMSA credential spec named by the GMSACredentialSpecName field.
                             type: string
                           gmsaCredentialSpecName:
-                            description: GMSACredentialSpecName is the name of the GMSA credential spec to use.
+                            description: GMSACredentialSpecName is the name of the
+                              GMSA credential spec to use.
                             type: string
                           hostProcess:
-                            description: HostProcess determines if a container should be run as a 'Host Process' container. This field is alpha-level and will only be honored by components that enable the WindowsHostProcessContainers feature flag. Setting this field without the feature flag will result in errors when validating the Pod. All of a Pod's containers must have the same effective HostProcess value (it is not allowed to have a mix of HostProcess containers and non-HostProcess containers).  In addition, if HostProcess is true then HostNetwork must also be set to true.
+                            description: |-
+                              HostProcess determines if a container should be run as a 'Host Process' container.
+                              All of a Pod's containers must have the same effective HostProcess value
+                              (it is not allowed to have a mix of HostProcess containers and non-HostProcess containers).
+                              In addition, if HostProcess is true then HostNetwork must also be set to true.
                             type: boolean
                           runAsUserName:
-                            description: The UserName in Windows to run the entrypoint of the container process. Defaults to the user specified in image metadata if unspecified. May also be set in PodSecurityContext. If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
+                            description: |-
+                              The UserName in Windows to run the entrypoint of the container process.
+                              Defaults to the user specified in image metadata if unspecified.
+                              May also be set in PodSecurityContext. If set in both SecurityContext and
+                              PodSecurityContext, the value specified in SecurityContext takes precedence.
                             type: string
                         type: object
                     type: object
@@ -205,8 +360,21 @@ spec:
               customerId:
                 description: SaaS customer ID.
                 type: string
+              proxyServerHost:
+                description: |-
+                  The system name, fully-qualified domain name (FQDN), or IP address for the proxy server in your environment.
+                  Optional: Default to "" which indicate is proxy is not used.
+                type: string
+              proxyServerPort:
+                description: |-
+                  Proxy server port
+                  Defaults to 443.
+                format: int32
+                type: integer
               reporterEnabled:
-                description: Whether the Reporter should be run Default to false.
+                description: |-
+                  Whether the Reporter should be run
+                  Default to false.
                 type: boolean
             required:
             - analysisServerHost
@@ -215,7 +383,9 @@ spec:
             description: RiverbedOperatorStatus defines the observed state of RiverbedOperator
             properties:
               conditions:
-                description: 'INSERT ADDITIONAL STATUS FIELD - define observed state of cluster Important: Run "make" to regenerate code after modifying this file'
+                description: |-
+                  INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
+                  Important: Run "make" to regenerate code after modifying this file
                 items:
                   type: string
                 type: array
@@ -230,12 +400,8 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
-    app.kubernetes.io/component: rbac
-    app.kubernetes.io/created-by: riverbed-operator
-    app.kubernetes.io/instance: controller-manager
     app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: serviceaccount
-    app.kubernetes.io/part-of: riverbed-operator
+    app.kubernetes.io/name: riverbed-operator
   name: riverbed-operator-controller-manager
   namespace: riverbed-operator
 ---
@@ -243,12 +409,8 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   labels:
-    app.kubernetes.io/component: rbac
-    app.kubernetes.io/created-by: riverbed-operator
-    app.kubernetes.io/instance: leader-election-role
     app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: role
-    app.kubernetes.io/part-of: riverbed-operator
+    app.kubernetes.io/name: riverbed-operator
   name: riverbed-operator-leader-election-role
   namespace: riverbed-operator
 rules:
@@ -287,7 +449,6 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  creationTimestamp: null
   name: riverbed-operator-manager-role
 rules:
 - apiGroups:
@@ -295,7 +456,6 @@ rules:
   resources:
   - configmaps
   - events
-  - namespaces
   - nodes
   - pods
   - services
@@ -307,17 +467,6 @@ rules:
   - ""
   resources:
   - namespaces
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - ""
-  resources:
   - serviceaccounts
   verbs:
   - create
@@ -331,6 +480,7 @@ rules:
   - apps
   resources:
   - daemonsets
+  - deployments
   verbs:
   - create
   - delete
@@ -342,25 +492,11 @@ rules:
 - apiGroups:
   - apps
   resources:
-  - daemonsets
-  - deployments
   - replicasets
   - statefulsets
   verbs:
   - get
   - list
-  - watch
-- apiGroups:
-  - apps
-  resources:
-  - deployments
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
   - watch
 - apiGroups:
   - batch
@@ -400,17 +536,6 @@ rules:
   - rbac.authorization.k8s.io
   resources:
   - clusterrolebindings
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - rbac.authorization.k8s.io
-  resources:
   - clusterroles
   verbs:
   - create
@@ -424,31 +549,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  labels:
-    app.kubernetes.io/component: kube-rbac-proxy
-    app.kubernetes.io/created-by: riverbed-operator
-    app.kubernetes.io/instance: metrics-reader
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: clusterrole
-    app.kubernetes.io/part-of: riverbed-operator
-  name: riverbed-operator-metrics-reader
-rules:
-- nonResourceURLs:
-  - /metrics
-  verbs:
-  - get
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    app.kubernetes.io/component: kube-rbac-proxy
-    app.kubernetes.io/created-by: riverbed-operator
-    app.kubernetes.io/instance: proxy-role
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: clusterrole
-    app.kubernetes.io/part-of: riverbed-operator
-  name: riverbed-operator-proxy-role
+  name: riverbed-operator-metrics-auth-role
 rules:
 - apiGroups:
   - authentication.k8s.io
@@ -464,15 +565,71 @@ rules:
   - create
 ---
 apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: riverbed-operator-metrics-reader
+rules:
+- nonResourceURLs:
+  - /metrics
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: riverbed-operator
+  name: riverbed-operator-riverbedoperator-editor-role
+rules:
+- apiGroups:
+  - operator.riverbed
+  resources:
+  - riverbedoperators
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - operator.riverbed
+  resources:
+  - riverbedoperators/status
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: riverbed-operator
+  name: riverbed-operator-riverbedoperator-viewer-role
+rules:
+- apiGroups:
+  - operator.riverbed
+  resources:
+  - riverbedoperators
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - operator.riverbed
+  resources:
+  - riverbedoperators/status
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   labels:
-    app.kubernetes.io/component: rbac
-    app.kubernetes.io/created-by: riverbed-operator
-    app.kubernetes.io/instance: leader-election-rolebinding
     app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: rolebinding
-    app.kubernetes.io/part-of: riverbed-operator
+    app.kubernetes.io/name: riverbed-operator
   name: riverbed-operator-leader-election-rolebinding
   namespace: riverbed-operator
 roleRef:
@@ -488,12 +645,8 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   labels:
-    app.kubernetes.io/component: rbac
-    app.kubernetes.io/created-by: riverbed-operator
-    app.kubernetes.io/instance: manager-rolebinding
     app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: clusterrolebinding
-    app.kubernetes.io/part-of: riverbed-operator
+    app.kubernetes.io/name: riverbed-operator
   name: riverbed-operator-manager-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -507,18 +660,11 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  labels:
-    app.kubernetes.io/component: kube-rbac-proxy
-    app.kubernetes.io/created-by: riverbed-operator
-    app.kubernetes.io/instance: proxy-rolebinding
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: clusterrolebinding
-    app.kubernetes.io/part-of: riverbed-operator
-  name: riverbed-operator-proxy-rolebinding
+  name: riverbed-operator-metrics-auth-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: riverbed-operator-proxy-role
+  name: riverbed-operator-metrics-auth-role
 subjects:
 - kind: ServiceAccount
   name: riverbed-operator-controller-manager
@@ -528,12 +674,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app.kubernetes.io/component: kube-rbac-proxy
-    app.kubernetes.io/created-by: riverbed-operator
-    app.kubernetes.io/instance: controller-manager-metrics-service
     app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: service
-    app.kubernetes.io/part-of: riverbed-operator
+    app.kubernetes.io/name: riverbed-operator
     control-plane: controller-manager
   name: riverbed-operator-controller-manager-metrics-service
   namespace: riverbed-operator
@@ -542,7 +684,7 @@ spec:
   - name: https
     port: 8443
     protocol: TCP
-    targetPort: https
+    targetPort: 8443
   selector:
     control-plane: controller-manager
 ---
@@ -570,12 +712,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/component: manager
-    app.kubernetes.io/created-by: riverbed-operator
-    app.kubernetes.io/instance: controller-manager
     app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: deployment
-    app.kubernetes.io/part-of: riverbed-operator
+    app.kubernetes.io/name: riverbed-operator
     control-plane: controller-manager
   name: riverbed-operator-controller-manager
   namespace: riverbed-operator
@@ -591,60 +729,21 @@ spec:
       labels:
         control-plane: controller-manager
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: kubernetes.io/arch
-                operator: In
-                values:
-                - amd64
-                - arm64
-                - ppc64le
-                - s390x
-              - key: kubernetes.io/os
-                operator: In
-                values:
-                - linux
       containers:
       - args:
-        - --secure-listen-address=0.0.0.0:8443
-        - --upstream=http://127.0.0.1:8080/
-        - --logtostderr=true
-        - --v=0
-        image: gcr.io/kubebuilder/kube-rbac-proxy:v0.13.1
-        name: kube-rbac-proxy
-        ports:
-        - containerPort: 8443
-          name: https
-          protocol: TCP
-        resources:
-          limits:
-            cpu: 500m
-            memory: 128Mi
-          requests:
-            cpu: 5m
-            memory: 64Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-      - args:
-        - --health-probe-bind-address=:8081
-        - --metrics-bind-address=127.0.0.1:8080
+        - --metrics-bind-address=:8443
         - --leader-elect
+        - --health-probe-bind-address=:8081
         command:
         - /manager
         env:
         - name: RVBD_JAVA_INSTRUMENTATION_IMAGE
-          value: riverbed/riverbed-java-instrumentation:12.25.0.532
+          value: riverbed/riverbed-java-instrumentation:12.27.0.544
         - name: RVBD_DOTNET_INSTRUMENTATION_IMAGE
-          value: riverbed/riverbed-dotnet-instrumentation:12.25.0.532
+          value: riverbed/riverbed-dotnet-instrumentation:12.27.0.544
         - name: RVBD_APM_AGENT_IMAGE
-          value: riverbed/riverbed-apm-agent:12.25.0.541
-        image: riverbed/riverbed-operator:1.0.0-17
+          value: riverbed/riverbed-apm-agent:12.27.0.544
+        image: riverbed/riverbed-operator:2.0.0-5
         livenessProbe:
           httpGet:
             path: /healthz
@@ -746,7 +845,7 @@ webhooks:
       namespace: riverbed-operator
       path: /mutate--v1-pod
   failurePolicy: Ignore
-  name: mpod.kb.io
+  name: mpod-v1.kb.io
   rules:
   - apiGroups:
     - ""
