@@ -1,4 +1,4 @@
-apiVersion: operator.riverbed/betav1
+apiVersion: operator.riverbed/v1
 kind: RiverbedOperator
 metadata:
   labels:
@@ -18,6 +18,11 @@ spec:
 # If this is a SaaS analysis server, use the SaaSAnalysisServerHost from the Install Agents, Standard Agent Installation
 # If on-prem, use the analysis server address as you would on an agent installation.
   analysisServerHost: "agents.apm.YOUR-ENV.aternity.com"
+
+# If you need to connect to the analysis server through a proxy, use the fully-qualified domain name (FQDN), or IP address for the proxyServerHost.  Setting proxyServerHost to "" indicates a proxy server is not used.
+  proxyServerHost: ""
+# Specify the appropriate proxy server port.
+  proxyServerPort: 443
 
 
 ## Start APM Agent Configuration

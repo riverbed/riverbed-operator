@@ -55,6 +55,8 @@ Under the ‘spec’ section of the file:
 -
 - update the analysisServerHost to your Analysis Server Host identifier.
 - update the customerId to your Customer ID.   If using on-prem analysis server, leave this value as an empty string.
+- update proxyServerHost .  If you need to connect to the analysis server through a proxy, specify the fully-qualified domain name (FQDN), or IP address for the proxyServerHost.  Leave this value as an empty string if a proxy server is not used.
+- update proxyServerPort if you are using a proxy server to the appropriate value, 
 
 **Verify that the Riverbed APM Agent is running**
 
