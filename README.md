@@ -16,6 +16,18 @@ az aks get-credentials --resource-group <your-resource-group> --name <your-aks-c
 aws eks --region <region-name> update-kubeconfig --name <cluster-name>
 ```
 
+**For OpenShift clusters - Attach to your OpenShift cluster**
+```
+oc login --token <token> --server <cluster-uri>
+```
+
+# Support for Red Hat OpenShift
+The Riverbed Operator 2.0.0+ brings support for Red Hat OpenShift 4.13+ (Kubernetes 1.26+).
+
+`oc` is a superset of `kubectl`. `kubectl` commands work in OpenShift if you replace `kubectl` with `oc`.
+
+For simplicity, `kubectl` is used in the instructions below and will work in both OpenShift and non-OpenShift environments.
+
 # Install cert-manager
 The Riverbed Operator requires that  [cert-manager](https://cert-manager.io/docs/installation/) is installed in your cluster and that your cluster uses Kubernetes version 1.26 or greater. The cert-manager is used for auto-instrumentation of Java and .NET applications.
 
@@ -38,11 +50,18 @@ NAME                                    READY   STATUS    RESTARTS      AGE
 cert-manager-webhook-5778696f85-4l7l4   1/1     Running   2 (30h ago)   5d5h
 ```
 
-# Install/Upgrade the Riverbed Operator
-Run the following from a command line to install the Riverbed Operator.  This can also be used to upgrade from a previous release (1.0.0 or 1.0.1) of the riverbed operator to the latest release.
+# Installing the Riverbed Operator
+Run the following from a command line to install the Riverbed Operator.
 ```
 kubectl apply -f https://raw.githubusercontent.com/riverbed/riverbed-operator/v2_alpha/riverbed-operator.yaml
 ```
+
+# Upgrading the Riverbed Operator
+When upgrading from a release prior to 2.0.0 you must uninstall the operator first by running the following from a command line before following the install instructions above.
+```
+kubectl delete -f https://raw.githubusercontent.com/riverbed/riverbed-operator/v2_alpha/riverbed-operator.yaml
+```
+Minor 2.x upgrades can be applied by simply running the install instructions above.
 
 # Configure the Riverbed Operator
 The Customer ID and Analysis Server Host will need to be configured for the APM Agent. Additional configuration may be required (outlined below)
