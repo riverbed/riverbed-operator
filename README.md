@@ -174,6 +174,22 @@ Here we are patching an existing .NET deployment to disable instrumentation
 kubectl patch deployment <application-deployment-name> --type=json -p='[{"op": "remove", "path": "/spec/template/metadata/annotations/instrument.apm.riverbed~1inject-dotnet"}]'
 ```
 
+# Auto instrumented applications and cluster restart.
+On a Kubernetes cluster restart, applications may fail to instrument if they start before the Riverbed Operator.  To mitigate this behavior you may need to redeploy the instrumented application.   
+
+You can also change the scheduling order of the instrumented application (using the steps below).      
++ Restrict the riverbed-operator to instrument applications in certain namespaces. 
+For example to restrict the riverbed-operator to applications running in the "apps" or "default" namespace
+```
+kubectl patch mutatingwebhookconfiguration riverbed-operator-mutating-webhook-configuration --type='json' -p='[{"op": "add", "path": "/webhooks/0/namespaceSelector", "value": {"matchExpressions": [{"key": "kubernetes.io/metadata.name", "operator": "In", "values": ["apps", "default"]}]}}]'
+```
+
++ Change the riverbed-operator-mutating-webhook-configuration failure policy
+```
+kubectl patch mutatingwebhookconfiguration riverbed-operator-mutating-webhook-configuration --type='json' -p='[{"op": "replace", "path": "/webhooks/0/failurePolicy", "value": "Fail"}]'
+```
+Changing the failurePolicy to fail must be done with caution as it can affect the startup order and timing for Kubernetes pods.
+
 # Legal
 © 2025 Riverbed Technology LLC All rights reserved.
 
