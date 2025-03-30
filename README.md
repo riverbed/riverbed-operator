@@ -37,9 +37,6 @@ kubectl get pods --namespace cert-manager
 ```
 
 **Install  [cert-manager](https://cert-manager.io/docs/installation/) in your cluster**
-```
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.5/cert-manager.yaml
-```
 
 Before installing the Riverbed Operator make sure the cert-manager-webhook is fully installed.
 Some installs may take up to thirty seconds to complete. Run the command below and verify READY is 1/1
