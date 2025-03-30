@@ -63,6 +63,8 @@ kubectl delete -f https://raw.githubusercontent.com/riverbed/riverbed-operator/v
 ```
 Minor 2.x upgrades can be applied by simply running the install instructions above.
 
+After an upgrade, you should restart any instrumented applications that were started prior to the upgrade.
+
 # Configure the Riverbed Operator
 The Customer ID and Analysis Server Host will need to be configured for the APM Agent. Additional configuration may be required (outlined below)
 ```
