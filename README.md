@@ -31,12 +31,12 @@ For simplicity, `kubectl` is used in the instructions below and will work in bot
 # Install cert-manager
 The Riverbed Operator requires that  [cert-manager](https://cert-manager.io/docs/installation/) is installed in your cluster and that your cluster uses Kubernetes version 1.26 or greater. The cert-manager is used for auto-instrumentation of Java and .NET applications.
 
-**Check if cert-manager is installed on your cluster**
+**Check if cert-manager is installed**
 ```
 kubectl get pods --namespace cert-manager
 ```
 
-**Install  [cert-manager](https://cert-manager.io/docs/installation/) in your cluster**
+**Install  [cert-manager](https://cert-manager.io/docs/installation/) if not already installed**
 
 Before installing the Riverbed Operator make sure the cert-manager-webhook is fully installed.
 Some installs may take up to thirty seconds to complete. Run the command below and verify READY is 1/1
