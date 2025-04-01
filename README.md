@@ -54,9 +54,13 @@ kubectl apply -f https://raw.githubusercontent.com/riverbed/riverbed-operator/v2
 ```
 
 # Upgrading the Riverbed Operator
-When upgrading from a release prior to 2.0.0 you must uninstall the operator first by running the following from a command line before following the install instructions above.
+When upgrading from a release prior to v2.0.0 you must first uninstall the operator before following the installation instructions above.  To uninstall, delete the installation manifests using a link to your currently running version vX.Y.Z like so:
 ```
-kubectl delete -f https://raw.githubusercontent.com/riverbed/riverbed-operator/v2_alpha/riverbed-operator.yaml
+kubectl delete -f https://github.com/riverbed/riverbed-operator/releases/download/vX.Y.Z/riverbed-operator.yaml
+```
+For example to uninstall release v1.0.2:
+```
+kubectl delete -f https://github.com/riverbed/riverbed-operator/releases/download/v1.0.2/riverbed-operator.yaml
 ```
 Minor 2.x upgrades can be applied by simply running the install instructions above.
 
