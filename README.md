@@ -50,7 +50,7 @@ cert-manager-webhook-5778696f85-4l7l4   1/1     Running   2 (30h ago)   5d5h
 # Installing the Riverbed Operator
 Run the following from a command line to install the Riverbed Operator.
 ```
-kubectl apply -f https://raw.githubusercontent.com/riverbed/riverbed-operator/v2_alpha/riverbed-operator.yaml
+kubectl apply -f https://github.com/riverbed/riverbed-operator/releases/latest/download/riverbed-operator.yaml
 ```
 
 # Upgrading the Riverbed Operator
@@ -69,7 +69,7 @@ After an upgrade, you should restart any instrumented applications that were sta
 # Configure the Riverbed Operator
 The Customer ID and Analysis Server Host will need to be configured for the APM Agent. Additional configuration may be required (outlined below)
 ```
-kubectl create -f https://raw.githubusercontent.com/riverbed/riverbed-operator/v2_alpha/riverbed_configuration.yaml --namespace=riverbed-operator --edit
+kubectl create -f https://github.com/riverbed/riverbed-operator/releases/latest/download/riverbed_configuration.yaml --namespace=riverbed-operator --edit
 ```
 
 Under the ‘spec’ section of the file:
