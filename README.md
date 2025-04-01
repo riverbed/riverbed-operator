@@ -62,7 +62,6 @@ For example to uninstall release v1.0.2:
 ```
 kubectl delete -f kubectl apply -f https://github.com/riverbed/riverbed-operator/releases/download/v1.0.2/riverbed-operator.yaml
 ```
-
 Minor 2.x upgrades can be applied by simply running the install instructions above.
 
 After an upgrade, you should restart any instrumented applications that were started prior to the upgrade.
