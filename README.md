@@ -49,8 +49,15 @@ cert-manager-webhook-5778696f85-4l7l4   1/1     Running   2 (30h ago)   5d5h
 
 # Installing the Riverbed Operator
 Run the following from a command line to install the Riverbed Operator.
+
+**For non-OpenShift clusters**
 ```
 kubectl apply -f https://raw.githubusercontent.com/riverbed/riverbed-operator/v2_alpha/riverbed-operator.yaml
+```
+
+**For OpenShift clusters**
+```
+kubectl apply -f https://raw.githubusercontent.com/riverbed/riverbed-operator/v2_alpha/riverbed-operator-openshift.yaml
 ```
 
 # Upgrading the Riverbed Operator
