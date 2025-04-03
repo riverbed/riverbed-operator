@@ -49,12 +49,19 @@ cert-manager-webhook-5778696f85-4l7l4   1/1     Running   2 (30h ago)   5d5h
 
 # Installing the Riverbed Operator
 Run the following from a command line to install the Riverbed Operator.
+
+**For non-OpenShift clusters**
 ```
 kubectl apply -f https://github.com/riverbed/riverbed-operator/releases/latest/download/riverbed-operator.yaml
 ```
 
+**For OpenShift clusters**
+```
+kubectl apply -f https://github.com/riverbed/riverbed-operator/releases/latest/download/riverbed-operator-openshift.yaml
+```
+
 # Upgrading the Riverbed Operator
-When upgrading from a release prior to v2.0.0 you must first uninstall the operator before following the installation instructions above.  To uninstall, delete the installation manifests using a link to your currently running version vX.Y.Z like so:
+If you are upgrading from a version earlier than v2.0.0, you must first uninstall the existing operator before installing the newer version. To do this, delete the installation manifests using the link corresponding to your current version (vX.Y.Z), as shown below:
 ```
 kubectl delete -f https://github.com/riverbed/riverbed-operator/releases/download/vX.Y.Z/riverbed-operator.yaml
 ```
@@ -73,6 +80,7 @@ kubectl create -f https://github.com/riverbed/riverbed-operator/releases/latest/
 ```
 
 Under the ‘spec’ section of the file:
+-
 - update the analysisServerHost to your Analysis Server Host identifier.
 - update the customerId to your Customer ID.   If using on-prem analysis server, leave this value as an empty string.
 - update proxyServerHost .  If you need to connect to the analysis server through a proxy, specify the fully-qualified domain name (FQDN), or IP address for the proxyServerHost.  Leave this value as an empty string if a proxy server is not used.
@@ -134,7 +142,7 @@ EOF
 If your application is already running or you do not want to add annotation to your deployment file. You can patch an existing deployment.
 
 ## Example instrumented .NET application patch:
-Here we are patching an existing .NET deployment
+Patching an existing .NET deployment
 ```
 kubectl patch deployment <application-deployment-name> -p '{"spec": {"template":{"metadata":{"annotations":{"instrument.apm.riverbed/inject-dotnet":"true"}}}} }'
 ```
@@ -145,7 +153,7 @@ kubectl patch deployment <application-deployment-name> -p '{\"spec\": {\"templat
 ```
 
 ## Example instrumented Java application patch:
-Here we are patching an existing Java deployment
+Patching an existing Java deployment
 ```
 kubectl patch deployment <application-deployment-name> -p '{"spec": {"template":{"metadata":{"annotations":{"instrument.apm.riverbed/inject-java":"true"}}}} }'
 ```
@@ -167,32 +175,32 @@ kubectl patch deployment <application-deployment-name> -p '{\"spec\": {\"templat
 ```
 
 ## Example application patch to disable Java instrumentation:
-Here we are patching an existing Java deployment to disable instrumentation
+Patching an existing Java deployment to disable instrumentation
 ```
 kubectl patch deployment <application-deployment-name> --type=json -p='[{"op": "remove", "path": "/spec/template/metadata/annotations/instrument.apm.riverbed~1inject-java"}]'
 ```
 
 ## Example application patch to disable .NET instrumentation:
-Here we are patching an existing .NET deployment to disable instrumentation
+Patching an existing .NET deployment to disable instrumentation
 ```
 kubectl patch deployment <application-deployment-name> --type=json -p='[{"op": "remove", "path": "/spec/template/metadata/annotations/instrument.apm.riverbed~1inject-dotnet"}]'
 ```
 
 # Auto instrumented applications and cluster restart.
-On a Kubernetes cluster restart, applications may fail to instrument if they start before the Riverbed Operator.  To mitigate this behavior you may need to redeploy the instrumented application.   
+After a Kubernetes cluster restart, applications may fail to instrument if they start before the Riverbed Operator.  To mitigate this behavior you may need to redeploy the instrumented application.   
 
-You can also change the scheduling order of the instrumented application (using the steps below).      
-+ Restrict the riverbed-operator to instrument applications in certain namespaces. 
-For example to restrict the riverbed-operator to applications running in the "apps" or "default" namespace
+You can also adjust the startup order of the instrumented application by following the steps below.
++ Restrict the Riverbed Operator to instrument applications only in specific namespaces.
+  For example, to restrict the Riverbed Operator to instrument only applications running in the `apps` or `default` namespaces
 ```
 kubectl patch mutatingwebhookconfiguration riverbed-operator-mutating-webhook-configuration --type='json' -p='[{"op": "add", "path": "/webhooks/0/namespaceSelector", "value": {"matchExpressions": [{"key": "kubernetes.io/metadata.name", "operator": "In", "values": ["apps", "default"]}]}}]'
 ```
 
-+ Change the riverbed-operator-mutating-webhook-configuration failure policy
++ Change the `riverbed-operator-mutating-webhook-configuration` failure policy
 ```
 kubectl patch mutatingwebhookconfiguration riverbed-operator-mutating-webhook-configuration --type='json' -p='[{"op": "replace", "path": "/webhooks/0/failurePolicy", "value": "Fail"}]'
 ```
-Changing the failurePolicy to fail must be done with caution as it can affect the startup order and timing for Kubernetes pods.
+Changing the failure policy should be done with caution, as it can impact the startup order and timing of Kubernetes pods.
 
 # Legal
 © 2025 Riverbed Technology LLC All rights reserved.
