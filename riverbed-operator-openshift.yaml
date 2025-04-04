@@ -857,3 +857,26 @@ webhooks:
     resources:
     - pods
   sideEffects: None
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: scc-privileged-granter
+rules:
+- apiGroups: ["security.openshift.io"]
+  resources: ["securitycontextconstraints"]
+  resourceNames: ["privileged"]
+  verbs: ["use"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: riverbed-operator-privileged-granter-binding
+subjects:
+- kind: ServiceAccount
+  name: riverbed-operator-controller-manager
+  namespace: riverbed-operator
+roleRef:
+  kind: ClusterRole
+  name: scc-privileged-granter
+  apiGroup: rbac.authorization.k8s.io
