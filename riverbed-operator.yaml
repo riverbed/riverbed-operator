@@ -738,12 +738,12 @@ spec:
         - /manager
         env:
         - name: RVBD_JAVA_INSTRUMENTATION_IMAGE
-          value: riverbed/riverbed-java-instrumentation:12.27.0.552
+          value: riverbed/riverbed-java-instrumentation:2.0.1-1
         - name: RVBD_DOTNET_INSTRUMENTATION_IMAGE
-          value: riverbed/riverbed-dotnet-instrumentation:12.27.0.552
+          value: riverbed/riverbed-dotnet-instrumentation:2.0.1-1
         - name: RVBD_APM_AGENT_IMAGE
-          value: riverbed/riverbed-apm-agent:12.27.0.552
-        image: riverbed/riverbed-operator:2.0.0-9
+          value: riverbed/riverbed-apm-agent:2.0.1-1
+        image: riverbed/riverbed-operator:2.0.1-9
         livenessProbe:
           httpGet:
             path: /healthz

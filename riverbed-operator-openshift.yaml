@@ -625,6 +625,20 @@ rules:
   - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: scc-privileged-granter
+rules:
+- apiGroups:
+  - security.openshift.io
+  resourceNames:
+  - privileged
+  resources:
+  - securitycontextconstraints
+  verbs:
+  - use
+---
+apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   labels:
@@ -665,6 +679,19 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: riverbed-operator-metrics-auth-role
+subjects:
+- kind: ServiceAccount
+  name: riverbed-operator-controller-manager
+  namespace: riverbed-operator
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: riverbed-operator-privileged-granter-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: scc-privileged-granter
 subjects:
 - kind: ServiceAccount
   name: riverbed-operator-controller-manager
@@ -738,12 +765,12 @@ spec:
         - /manager
         env:
         - name: RVBD_JAVA_INSTRUMENTATION_IMAGE
-          value: riverbed/riverbed-java-instrumentation:12.27.0.552
+          value: riverbed/riverbed-java-instrumentation:2.0.1-1
         - name: RVBD_DOTNET_INSTRUMENTATION_IMAGE
-          value: riverbed/riverbed-dotnet-instrumentation:12.27.0.552
+          value: riverbed/riverbed-dotnet-instrumentation:2.0.1-1
         - name: RVBD_APM_AGENT_IMAGE
-          value: riverbed/riverbed-apm-agent:12.27.0.552
-        image: riverbed/riverbed-operator:2.0.0-9
+          value: riverbed/riverbed-apm-agent:2.0.1-1
+        image: riverbed/riverbed-operator:2.0.1-9
         livenessProbe:
           httpGet:
             path: /healthz
@@ -857,26 +884,3 @@ webhooks:
     resources:
     - pods
   sideEffects: None
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: scc-privileged-granter
-rules:
-- apiGroups: ["security.openshift.io"]
-  resources: ["securitycontextconstraints"]
-  resourceNames: ["privileged"]
-  verbs: ["use"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: riverbed-operator-privileged-granter-binding
-subjects:
-- kind: ServiceAccount
-  name: riverbed-operator-controller-manager
-  namespace: riverbed-operator
-roleRef:
-  kind: ClusterRole
-  name: scc-privileged-granter
-  apiGroup: rbac.authorization.k8s.io
