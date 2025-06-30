@@ -1,0 +1,68 @@
+{{- if .Values.riverbedOperator.enabled }}
+apiVersion: operator.riverbed/v1
+kind: RiverbedOperator
+metadata:
+  name: {{ .Values.riverbedOperator.name | default "riverbed-operator" }}
+  namespace: {{ .Values.namespace }}
+  {{- if .Values.riverbedOperator.labels }}
+  labels:
+{{ toYaml .Values.riverbedOperator.labels | indent 4 }}
+  {{- end }}
+  {{- if .Values.riverbedOperator.annotations }}
+  annotations:
+{{ toYaml .Values.riverbedOperator.annotations | indent 4 }}
+  {{- end }}
+spec:
+  analysisServerHost: {{ .Values.riverbedOperator.analysisServerHost | quote }}
+  {{- if .Values.riverbedOperator.analysisServerPort }}
+  analysisServerPort: {{ .Values.riverbedOperator.analysisServerPort }}
+  {{- end }}
+  {{- if .Values.riverbedOperator.customerId }}
+  customerId: {{ .Values.riverbedOperator.customerId | quote }}
+  {{- end }}
+  {{- if .Values.riverbedOperator.proxyServerHost }}
+  proxyServerHost: {{ .Values.riverbedOperator.proxyServerHost | quote }}
+  {{- end }}
+  {{- if .Values.riverbedOperator.proxyServerPort }}
+  proxyServerPort: {{ .Values.riverbedOperator.proxyServerPort }}
+  {{- end }}
+  {{- if .Values.riverbedOperator.reporterEnabled }}
+  reporterEnabled: {{ .Values.riverbedOperator.reporterEnabled }}
+  {{- end }}
+  {{- if .Values.riverbedOperator.conditions }}
+  conditions:
+{{ toYaml .Values.riverbedOperator.conditions | indent 4 }}
+  {{- end }}
+  {{- if .Values.riverbedOperator.apmAgent }}
+  apmAgent:
+    {{- if .Values.riverbedOperator.apmAgent.configName }}
+    configName: {{ .Values.riverbedOperator.apmAgent.configName | quote }}
+    {{- end }}
+    {{- if .Values.riverbedOperator.apmAgent.containerMetrics }}
+    containerMetrics: {{ .Values.riverbedOperator.apmAgent.containerMetrics }}
+    {{- end }}
+    {{- if .Values.riverbedOperator.apmAgent.hostMetrics }}
+    hostMetrics: {{ .Values.riverbedOperator.apmAgent.hostMetrics }}
+    {{- end }}
+    {{- if .Values.riverbedOperator.apmAgent.javaMetrics }}
+    javaMetrics: {{ .Values.riverbedOperator.apmAgent.javaMetrics }}
+    {{- end }}
+    {{- if .Values.riverbedOperator.apmAgent.logicalServer }}
+    logicalServer: {{ .Values.riverbedOperator.apmAgent.logicalServer | quote }}
+    {{- end }}
+    {{- if .Values.riverbedOperator.apmAgent.maxInstrLogs }}
+    maxInstrLogs: {{ .Values.riverbedOperator.apmAgent.maxInstrLogs }}
+    {{- end }}
+    {{- if .Values.riverbedOperator.apmAgent.processMetrics }}
+    processMetrics: {{ .Values.riverbedOperator.apmAgent.processMetrics }}
+    {{- end }}
+    {{- if .Values.riverbedOperator.apmAgent.resources }}
+    resources:
+{{ toYaml .Values.riverbedOperator.apmAgent.resources | indent 6 }}
+    {{- end }}
+    {{- if .Values.riverbedOperator.apmAgent.securityContext }}
+    securityContext:
+{{ toYaml .Values.riverbedOperator.apmAgent.securityContext | indent 6 }}
+    {{- end }}
+  {{- end }}
+{{- end }} 

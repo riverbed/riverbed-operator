@@ -1,0 +1,42 @@
+Thank you for installing {{ .Chart.Name }}.
+
+Your release is named {{ .Release.Name }}.
+
+To learn more about the release, try:
+
+  $ helm status {{ .Release.Name }}
+  $ helm get all {{ .Release.Name }}
+
+The Riverbed Operator has been deployed to the {{ .Values.namespace }} namespace.
+
+{{- if .Values.riverbedOperator.enabled }}
+A RiverbedOperator custom resource has been created with the name "{{ .Values.riverbedOperator.name }}".
+{{- else }}
+To create a RiverbedOperator instance, you can either:
+
+1. Enable the built-in template by setting riverbedOperator.enabled=true:
+   $ helm upgrade {{ .Release.Name }} . --set riverbedOperator.enabled=true --set riverbedOperator.analysisServerHost=your-server.example.com
+
+2. Or create one manually using the following example:
+
+apiVersion: operator.riverbed/v1
+kind: RiverbedOperator
+metadata:
+  name: example-riverbed-operator
+  namespace: {{ .Values.namespace }}
+spec:
+  analysisServerHost: "your-analysis-server.example.com"
+  analysisServerPort: 443
+  customerId: "your-customer-id"
+  reporterEnabled: false
+  apmAgent:
+    configName: "default config"
+    containerMetrics: false
+    hostMetrics: true
+    javaMetrics: true
+    logicalServer: ""
+    maxInstrLogs: 500
+    processMetrics: false
+{{- end }}
+
+For more information, please visit the Riverbed documentation. 

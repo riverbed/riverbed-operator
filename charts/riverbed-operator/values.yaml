@@ -1,0 +1,59 @@
+namespace: riverbed-operator
+replicaCount: 1
+image:
+  repository: riverbed/riverbed-operator
+  tag: "2.0.1-9"
+  pullPolicy: IfNotPresent
+javaInstrumentationImage: riverbed/riverbed-java-instrumentation:2.0.1-1
+dotnetInstrumentationImage: riverbed/riverbed-dotnet-instrumentation:2.0.1-1
+apmAgentImage: riverbed/riverbed-apm-agent:2.0.1-1
+resources:
+  limits:
+    cpu: 500m
+    memory: 128Mi
+  requests:
+    cpu: 10m
+    memory: 64Mi
+service:
+  metricsPort: 8443
+  webhookPort: 9443
+  webhookServicePort: 443
+
+# RiverbedOperator Custom Resource Configuration
+riverbedOperator:
+  enabled: false  # Set to true to create a RiverbedOperator instance
+  name: "riverbed-operator"
+  # labels: {}
+  # annotations: {}
+  
+  # Required: Analysis server configuration
+  analysisServerHost: "your-analysis-server.example.com"
+  analysisServerPort: 443
+  
+  # Optional: Customer and proxy configuration
+  # customerId: "your-customer-id"
+  # proxyServerHost: ""
+  # proxyServerPort: 443
+  # reporterEnabled: false
+  # conditions: []
+  
+  # APM Agent configuration
+  apmAgent:
+    configName: "default config"
+    containerMetrics: false
+    hostMetrics: true
+    javaMetrics: true
+    logicalServer: ""
+    maxInstrLogs: 500
+    processMetrics: false
+    # resources:
+    #   limits:
+    #     cpu: 200m
+    #     memory: 256Mi
+    #   requests:
+    #     cpu: 100m
+    #     memory: 128Mi
+    # securityContext:
+    #   runAsNonRoot: true
+    #   runAsUser: 1000
+    #   runAsGroup: 1000 

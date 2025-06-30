@@ -1,0 +1,5 @@
+apiVersion: v2
+name: riverbed-operator
+description: A Helm chart for deploying the Riverbed Operator and its resources
+version: 0.1.0
+appVersion: "2.0.1-9" 
