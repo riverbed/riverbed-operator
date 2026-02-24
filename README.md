@@ -133,7 +133,7 @@ spec:
     spec:
       containers:
       - name: spring-app
-        image: springio/gs-spring-boot-docker
+        image: docker.io/springio/gs-spring-boot-docker
         ports:
         - containerPort: 8080
 EOF
