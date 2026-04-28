@@ -101,14 +101,32 @@ riverbed-operator-controller-manager-d44c57448-8jdth   2/2     Running   0      
 ```
 
 # Auto-Instrument Your Applications
-Update your application's `spec.template.metadata.annotations` to include one or more of the annotations listed in the below table:
+Update your application's `spec.template.metadata.annotations` to include one or more of the annotations listed in the below table.
+
+**Annotation placement:** Add all `instrument.apm.riverbed/*` annotations under **`spec.template.metadata.annotations`** (the Pod template). Do **not** add them only under the workload's top-level `metadata.annotations` (for example `Deployment.metadata.annotations` on the Deployment resource). The mutating webhook reads the pod template metadata only.
 
 | Annotation                            | Values                        | Defaults            | Description                                            |
 |---------------------------------------|-------------------------------|---------------------|--------------------------------------------------------|
 | instrument.apm.riverbed/inject-java   | "true" or "false"             | "false"             | For Java instrumentation                               |
 | instrument.apm.riverbed/inject-dotnet | "true" or "false"             | "false"             | For .NET instrumentation                               |
 | instrument.apm.riverbed/configName    | "Configuration Name"          | Operator configName | Process Configuration Name to instrument application.  |
-| instrument.apm.riverbed/runtime       | "linux-musl-x64" or "linux-x64" | "linux-x64"       | Runtime environment used to instrument the application.  If your app is based on Alpine Linux you need to add the annotation to use linux-musl-x64 runtime instead of the default.|
+| instrument.apm.riverbed/runtime       | "linux-musl-x64" or "linux-x64" | "linux-x64"       | Selects glibc (`linux-x64`, default) vs musl (`linux-musl-x64`) native components. Use `linux-musl-x64` for Alpine and other musl-based images. This annotation does **not** enable injection by itself; you must still set `inject-java` and/or `inject-dotnet` to `"true"`. See **Alpine Linux (musl)** below. |
+
+## Alpine Linux (musl)
+
+For **Alpine Linux** and other **musl**-based application images, the profiler is injected only when **both** of the following are set on **`spec.template.metadata.annotations`**:
+
+1. **`instrument.apm.riverbed/runtime`:** `"linux-musl-x64"` (instead of the default `linux-x64`).
+2. **`instrument.apm.riverbed/inject-java`** and/or **`instrument.apm.riverbed/inject-dotnet`:** `"true"` for the language you are instrumenting.
+
+**Setting the runtime annotation alone is not sufficient** for profiler injection. Customers sometimes assume that choosing the musl runtime is enough on Alpine; you must also enable Java or .NET injection as for any other workload.
+
+**Prerequisite — `libstdc++.so.6` (GNU libstdc++)**  
+The profiler requires **GNU libstdc++**, typically provided as **`libstdc++.so.6`**. Many minimal Alpine images do not include it. Ensure your application container image installs the package that ships this library (on Alpine 3.x the package is usually named `libstdc++`), for example in your Dockerfile:
+
+```
+RUN apk add --no-cache libstdc++
+```
 
 ## Example instrumented Java application deployment:
 This shows adding the annotation into a deployment file.
@@ -139,6 +157,37 @@ spec:
 EOF
 ```
 
+## Example instrumented Java application on Alpine (musl)
+
+This deployment uses an Alpine-based Java image and **`spec.template.metadata.annotations`** for both musl runtime and Java injection. If your image does not ship **`libstdc++.so.6`**, add `libstdc++` to the image (see **Alpine Linux (musl)** above). For .NET on Alpine, use an `-alpine` image tag and set `instrument.apm.riverbed/inject-dotnet: "true"` instead of `inject-java`.
+
+```
+kubectl apply -f - <<EOF
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-app-alpine
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring-app-alpine
+  template:
+    metadata:
+      annotations:
+        instrument.apm.riverbed/runtime: "linux-musl-x64"
+        instrument.apm.riverbed/inject-java: "true"
+      labels:
+        app: spring-app-alpine
+    spec:
+      containers:
+      - name: spring-app-alpine
+        image: docker.io/eclipse-temurin:21-jre-alpine
+        ports:
+        - containerPort: 8080
+EOF
+```
+
 If your application is already running or you do not want to add annotation to your deployment file. You can patch an existing deployment.
 
 ## Example instrumented .NET application patch:
@@ -163,8 +212,11 @@ kubectl patch deployment <application-deployment-name> -p '{"spec": {"template":
 kubectl patch deployment <application-deployment-name> -p '{\"spec\": {\"template\":{\"metadata\":{\"annotations\":{\"instrument.apm.riverbed/inject-java\":\"true\"}}}} }'
 ```
 
-## Example instrumented alpine application patch:
-If you are patching an existing alpine deployment, this additional patch is necessary, after you've applied the .NET or Java patches above:
+## Example instrumented Alpine (musl) application patch:
+
+For Alpine or other musl-based workloads you need **both** injection (`inject-java` or `inject-dotnet`) **and** `runtime: linux-musl-x64` on **`spec.template.metadata.annotations`**. If you patch in two steps, apply the Java or .NET patch and the runtime patch below (order does not matter). For a single manifest with both annotations, see **Example instrumented Java application on Alpine (musl)** above.
+
+**Add the musl runtime** (in addition to `inject-java` / `inject-dotnet`):
 ```
 kubectl patch deployment <application-deployment-name> -p '{"spec": {"template":{"metadata":{"annotations":{"instrument.apm.riverbed/runtime":"linux-musl-x64"}}}} }'
 ```
