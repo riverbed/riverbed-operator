@@ -765,12 +765,12 @@ spec:
         - /manager
         env:
         - name: RVBD_JAVA_INSTRUMENTATION_IMAGE
-          value: docker.io/riverbed/riverbed-java-instrumentation:2.0.1-1
+          value: docker.io/riverbed/riverbed-java-instrumentation:2.1.0-7
         - name: RVBD_DOTNET_INSTRUMENTATION_IMAGE
-          value: docker.io/riverbed/riverbed-dotnet-instrumentation:2.0.1-1
+          value: docker.io/riverbed/riverbed-dotnet-instrumentation:2.1.0-7
         - name: RVBD_APM_AGENT_IMAGE
-          value: docker.io/riverbed/riverbed-apm-agent:2.0.1-1
-        image: docker.io/riverbed/riverbed-operator:2.0.1-9
+          value: docker.io/riverbed/riverbed-apm-agent:2.1.0-7
+        image: docker.io/riverbed/riverbed-operator:2.1.0-12
         livenessProbe:
           httpGet:
             path: /healthz
