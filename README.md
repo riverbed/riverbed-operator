@@ -3,6 +3,9 @@
 # Getting started
 Welcome to the Riverbed Operator installation guide. This guide will quickly show you how to install the Riverbed Operator and instrument both Java and .NET applications running in Kubernetes.
 
+**Current version:** [2.1.0](https://raw.githubusercontent.com/riverbed/riverbed-operator/refs/tags/v2.1.0/riverbed-operator.yaml)<br>
+**APM Agent version:** [13.2.1](https://help.aternity.com/bundle/release_news_apm_agent_console_apm/page/console/topics/release_wn_agent_apm.html)
+
 # Attach to your cluster
 Ensure that kubectl points to your Kubernetes cluster where the Riverbed Operator and Riverbed APM Agent will run.
 
